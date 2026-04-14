@@ -1,6 +1,7 @@
 import json
 import os
-from app.schemas.task import Task, TaskCreate
+from fastapi import HTTPException
+from app.schemas.task import Task, TaskCreate, TaskStatusUpdate
 
 JSON_FILE = "data/tasks.json"
 
@@ -30,3 +31,11 @@ def delete_task(task_id: int):
     tasks = [t for t in tasks if t["id"] != task_id]
     save_tasks(tasks)
 
+def update_status(task_id: int, task_status: TaskStatusUpdate):
+    tasks = read_tasks()
+    for task in tasks:
+        if task["id"] == task_id:
+            task["completed"] = task_status.completed
+            save_tasks(tasks)
+            return task
+    raise HTTPException(status_code=404, detail="Task not found")

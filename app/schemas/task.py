@@ -14,3 +14,6 @@ class Task(TaskBase):
 
     class Config:
         from_attributes = True
+
+class TaskStatusUpdate(BaseModel):
+    completed: bool
